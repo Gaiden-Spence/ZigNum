@@ -53,7 +53,6 @@ pub fn Array(comptime T: type) type {
             self.allocator.free(self.shape);
         }
 
-        // Get element at multi-dimensional index
         pub fn get(self: Self, indices: []const usize) T {
             if (self.shape.len != 2) {
                 print("Only 2D arrays supported for now\n", .{});
@@ -85,7 +84,6 @@ pub fn Array(comptime T: type) type {
             }
         }
 
-        // Set element at multi-dimensional index
         pub fn set(self: *Self, indices: []const usize, value: T) void {
             var flat_index: usize = 0;
             for (indices, 0..) |idx, dim| {
