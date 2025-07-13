@@ -1,6 +1,6 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
-
+const print = std.debug.print;
 pub const version = "0.1.0";
 
 pub fn Array(comptime T: type) type {
@@ -56,7 +56,7 @@ pub fn Array(comptime T: type) type {
         // Get element at multi-dimensional index
         pub fn get(self: Self, indices: []const usize) T {
             if (self.shape.len != 2) {
-                std.debug.panic("Only 2D arrays supported for now\n", .{});
+                print("Only 2D arrays supported for now\n", .{});
             }
             const row = indices[0];
             const col = indices[1];
@@ -67,6 +67,7 @@ pub fn Array(comptime T: type) type {
         pub fn print_matrix(self: Self) void {
             if (self.shape.len != 2) {
                 std.debug.print("Can only print 2D matrices\n", .{});
+
                 return;
             }
 
@@ -74,9 +75,9 @@ pub fn Array(comptime T: type) type {
             const cols = self.shape[1];
 
             for (0..rows) |row| {
-                std.debug.print("[\n", .{});
+                std.debug.print("[", .{});
                 for (0..cols) |col| {
-                    if (col > 0) std.debug.print(", \n", .{});
+                    if (col > 0) std.debug.print(", ", .{});
                     const indices = [_]usize{ row, col };
                     std.debug.print("{:6.1}", .{self.get(&indices)});
                 }
@@ -91,6 +92,12 @@ pub fn Array(comptime T: type) type {
                 flat_index += idx * self.strides[dim];
             }
             self.data[flat_index] = value;
+        }
+
+        pub fn scalar(self: *Self, scale: T) void {
+            for (0..self.data.len) |i| {
+                self.data[i] *= scale;
+            }
         }
     };
 }
